@@ -34,10 +34,10 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
             throw new UnauthorizedException("Inserire token nell'Authorization Header nel formato corretto!");
 
         // 2. Estraiamo il token dall'header
-        String accessToken = authHeader.substring(7);
+        String token = authHeader.substring(7);
 
         // 3. Verifichiamo se il token è stato manipolato (verifichiamo la signature) o se è scaduto (verifichiamo Expiration Date)
-        jwt.verifyToken(accessToken);
+        jwt.verifyToken(token);
 
         // 4. Se tutto è OK, andiamo avanti (passiamo la richiesta al prossimo filtro o al controller)
         filterChain.doFilter(request, response); // Tramite .doFilter(req,res) richiamo il prossimo membro della catena (o un filtro o un controller)

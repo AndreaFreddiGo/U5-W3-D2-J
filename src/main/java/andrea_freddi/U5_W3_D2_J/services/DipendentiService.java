@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,9 +23,11 @@ import java.util.UUID;
 public class DipendentiService {
     // Inietto il Cloudinary per caricare le immagini
     @Autowired
-    Cloudinary cloudinaryUploader;
+    private Cloudinary cloudinaryUploader;
     @Autowired
     private DipendentiRepository dipendentiRepository;
+    @Autowired
+    private PasswordEncoder bcrypt;
 
     // Creo un metodo per salvare un nuovo dipendente
     public Dipendente save(DipendentePayload body) {
@@ -37,7 +40,7 @@ public class DipendentiService {
         // Se non trovo nessun dipendente con quell'email, creo un nuovo dipendente
         Dipendente nuovoDipendente = new Dipendente(body.cognome(), body.email(),
                 "https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome(),
-                body.nome(), body.password(), body.username());
+                body.nome(), bcrypt.encode(body.password()), body.username());
         return dipendentiRepository.save(nuovoDipendente);
     }
 

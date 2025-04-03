@@ -2,13 +2,17 @@ package andrea_freddi.U5_W3_D2_J.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 // Annotazione per stabilire che questa non sarà una classe di configurazione qualsiasi, ma sarà dedicata a configurare Spring Security
 public class SecurityConfig {
     @Bean
@@ -29,5 +33,10 @@ public class SecurityConfig {
         // - personalizzare il comportamento di alcune funzionalità preesistenti
         // - aggiungere filtri personalizzati alla Filter Chain
         return httpSecurity.build();
+    }
+
+    @Bean
+    PasswordEncoder getBCrypt() {
+        return new BCryptPasswordEncoder(12);
     }
 }
