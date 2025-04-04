@@ -1,5 +1,6 @@
 package andrea_freddi.U5_W3_D2_J.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "dipendenti")
+@JsonIgnoreProperties({"password", "role", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "authorities", "enabled"})
 public class Dipendente implements UserDetails {
     @Id
     @Setter(AccessLevel.NONE) // non voglio che venga settato dall'esterno

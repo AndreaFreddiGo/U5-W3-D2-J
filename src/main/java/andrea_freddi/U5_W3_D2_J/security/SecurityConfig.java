@@ -36,7 +36,6 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll()); // Disabilitiamo il 401 che riceviamo di default
         // per OGNI richiesta che facciamo su OGNI endpoint
-
         // - personalizzare il comportamento di alcune funzionalità preesistenti
         // - aggiungere filtri personalizzati alla Filter Chain
 

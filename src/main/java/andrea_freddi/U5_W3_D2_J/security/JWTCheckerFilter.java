@@ -1,21 +1,28 @@
 package andrea_freddi.U5_W3_D2_J.security;
 
+import andrea_freddi.U5_W3_D2_J.entities.Dipendente;
 import andrea_freddi.U5_W3_D2_J.exceptions.UnauthorizedException;
+import andrea_freddi.U5_W3_D2_J.services.DipendentiService;
 import andrea_freddi.U5_W3_D2_J.tools.JWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component // Non dimenticare @Component altrimenti questa classe non verrà utilizzata nella catena dei filtri
 public class JWTCheckerFilter extends OncePerRequestFilter {
-
+    @Autowired
+    private DipendentiService dipendentiService;
     @Autowired
     private JWT jwt;
 
@@ -29,7 +36,14 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
 
         jwt.verifyToken(token);
 
-        
+        String dipendenteId = jwt.getIdFromToken(token);
+        Dipendente dipendenteAttuale = this.dipendentiService.findById(UUID.fromString(dipendenteId));
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(dipendenteAttuale, null, dipendenteAttuale.getAuthorities());
+        // Il terzo parametro serve per poter utilizzare i vari @PreAuthorize perchè così il SecurityContext saprà quali sono i ruoli dell'utente
+        // che sta effettuando la richiesta
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         filterChain.doFilter(request, response);
 
     }
